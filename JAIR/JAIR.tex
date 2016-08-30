@@ -6,6 +6,7 @@
 \usepackage{JAIR}
 \usepackage{times}
 \usepackage{latexsym}
+\usepackage{url}
 
 % Uncomment this line for the final submission:
 \emnlpfinalcopy
@@ -20,7 +21,7 @@
 \newcommand\BibTeX{B{\sc ib}\TeX}
 
 
-\title{Natural Language Processing with Deep Networks: A Review}
+\title{Natural Language Processing in the Age of Deep Learning: A Review}
 
 % Author information can be set in various styles:
 % For several authors from the same institution:
@@ -55,8 +56,100 @@
 
 
 \section{Introduction}
+what this paper is about
+
+\section{Backgrounnd}
+
+History of neural language models
+
 \newcite{bengio2003neural}
-\newcite{miikkulainen1991natural, miikkulainen1993subsymbolic}
+\newcite{miikkulainen1991natural}
+\cite{miikkulainen1993subsymbolic}
+
+\section{Language Modelling}
+
+\section{Machine Translation}
+
+\section{Machine Comprehension}
+
+Following the development of recurrent neural networks capable of mapping from sequences to sequences and their successful application to machine translation, NLP researchers noticed that a similar approach could be effective in \emph{machine comprehension} style applications. The terms \emph{machine comprehension}, \emph{machine reading} typically refer to the broad class of task in which an algorithm has access to a passages of multiple sentences of prose and a set of questions conrresponding to each passage. The algorithm must select a correct (single or multi-word) answer to each question based on the information in the corresponding passage.  Machine comprehension have much in common with \emph{reading comprehension} questions that are used test human reasoning and/or linguistic proficiency in language learners. 
+
+\subsection{Datasets and sub-tasks}
+\paragraph{Deepmind news datasets} The current wave of neural network-based machine comprehension research was in large part triggered by the news comprehension dataset of~\newcite{hermann2015teaching}, compiled automatically from articles on the CNN and Daily Mail websites. News stories on both sites are summarised by a series of bullet points that summarise their main points. To develop their machine comprehension task,~\cite{hermann2015teaching} first identified all named entities in both the article and the bullet points using standard (NER) tools. A question in the CNN or Daily Mail dataset was then constructed by selecting an article, removing an entity from one of the bullet points in the summary and verifying that the entity does indeed appear in the article. To prevent the application of external knowledge to the task, the entities in the articles were replaced with symbolic identifiers. The task facing models is therefore to match the missing entity in each question to one of the symbolic identifiers identifiers in its article. The (smaller) CNN section of the Deepmind dataset alone consists of over 380,000 training and 4,000 test questions taked from over 90,000 distinct articles.
+
+Describe the CNN models? 
+\paragraph{Facebook Children's Book Test (CBT)} The CBT is a multiple-choice test in which models must identify missing words in children's book sentences by using information from the previous 20 sentences in the book~\newcite{hill2015goldilocks}. The questions were selected such that the missing word from the 21st sentence, as well as the nine (incorrect) candidate answer choices, appear at least once in the preceeding 20 sentences. The training and test questions are also (optionally) separated according to whether the missing word (and candidate choices) is a preposition, a verb, a common noun or a named entity. An important difference between the CBT and the Deepmind news dataset is that entities are not anonymised, so that general knowledge acquired from external resources can be used by models to improve performance on the test set. In total there are over 660,000 training and 10,000 test questions in the CBT, divided roughly equally according to the four question types. 
+
+\paragraph{Stanford Question Answering (SQuAD) dataset} The SQuAD dataset,~\newcite{rajpurkar2016squad} crowdsourced English speakers to write questions that follow naturally from Wikipedia passages. Thus, while the dataset was more expensive to create, models attempting the SQuAD task must answer authentic questions rather than cloze-style statements with missing words, bringing the task closer to genuine human reading comprehension. A further difference from the Deepmind and CBT datasets is that annotators were encouraged to write questions whose answers were multi-word segments in the article [GIVE AN EXAMPLE]. FINISH ME
+
+ \paragraph{TTI Who did What dataset} The Who did What dataset~\cite{onishi2016did} is based on articles in the English Gigaword Corpus. To compile the resource,~\newcite{onishi2016did} selected articles whose first sentence contained a person named entity. The person entity in question was removed from the sentence to form the question, the remainder of the article discarded, and a new (supporting) article retrieved that refers to the same person. To ensure they are sufficiently informative, the supporting articles were retrieved via an IE-style string matching procedure in which the question is used as the query. Questions were discarded if they could be answered by simple language model or frequency baselines, resulting in a bank of over 180,000 train and 10,000 test questions that humans can answer approximately 84\% of the time. As in the SQuAD dataset, answers in the Who did What dataset may consist of multiple words, although they are all person entities (\emph{the King of France}). 
+
+
+
+
+
+
+Prior to these large-scale resources, research on machine comprehension was based on questions taken directly from real human reading comprehension questions~\cite{hirschman1999deep}. However, since such questions are usually produced by private education enterprises, large-scale datasets of this kind are not freely available for NLP research. Another notable forerunner to today's massive datasets is the \emph{MC Test}~\cite{richardson2013mctest}, which consists of 660 stories, and corresponding questions, all written by human annotators. The training data made available with the MC Test dataset is much smaller than more recent resources, and neural language models have not typically performed as well on this task as approaches that employ bespoke, hand-engineered symbolic features. However, recent work has shown that neural language models trained additionally on external data sources can perform competitively on the MC Test~\cite{trischler2016parallel}. Developing and understanding such transfer from general-purpose training data to specific small-scale applications is a key challenge for neural net approaches to language understanding. 
+
+
+   
+
+\cite{sordoni2016iterative} (Montreal)
+ 
+
+
+\cite{dhingra2016gated} gatted reader
+
+\cite{trischler2016natural} Maluuba epi reader
+
+\cite{miller2016key} key value FB
+
+\cite{cui2016attention} and 
+
+\cite{weissenborn2016separating} separating answers from queries
+
+\cite{kadlec2016text} IBM watson paper
+
+
+
+\cite{chen2016thorough} (Analysis of CNN)
+\cite{kobayashi2016dynamic}
+\cite{yin2016attention}
+
+
+
+
+
+
+
+\cite{onishi2016did} (TTI QA)
+
+
+\cite{richardson2013mctest} MC Test
+
+\footnote{An excellent repository for many of the machine learning datasets and papers discussed in this section can be found at \url{http://uclmr.github.io/ai4exams/eqa.html}}
+
+\section{Entailment}
+
+\section{Dialogue}
+
+\section{Question Answering?}
+
+\section{Representation Learning}
+\subsection{Parsing}
+\subsection{Neural representations}
+
+\section{Summarisation}
+
+\section{Active Learning}
+
+\section{Miscellaneous Others}
+
+
+
+
+
+
 
 
 
