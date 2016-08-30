@@ -83,7 +83,7 @@
 \setlength\footskip{0pt}
 \thispagestyle{empty}      
 \pagestyle{empty}
-\flushbottom \twocolumn \sloppy
+\flushbottom  \sloppy
 
 %% A4 version of page layout
 %\setlength\topmargin{-0.45cm}    % changed by Rz  -1.4
@@ -347,7 +347,7 @@
  \begingroup
    \def\thefootnote{\fnsymbol{footnote}}
    \def\@makefnmark{\hbox to 0pt{$^{\@thefnmark}$\hss}}
-   \twocolumn[\@maketitle] \@thanks
+   \@maketitle \@thanks
  \endgroup
  \setcounter{footnote}{0}
  \let\maketitle\relax \let\@maketitle\relax
