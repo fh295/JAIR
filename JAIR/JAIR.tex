@@ -72,66 +72,64 @@ History of neural language models
 
 \section{Machine Comprehension}
 
-Following the development of recurrent neural networks capable of mapping from sequences to sequences and their successful application to machine translation, NLP researchers noticed that a similar approach could be effective in \emph{machine comprehension} style applications. The terms \emph{machine comprehension}, \emph{machine reading} typically refer to the broad class of task in which an algorithm has access to a passages of multiple sentences of prose and a set of questions conrresponding to each passage. The algorithm must select a correct (single or multi-word) answer to each question based on the information in the corresponding passage.  Machine comprehension have much in common with \emph{reading comprehension} questions that are used test human reasoning and/or linguistic proficiency in language learners. 
+Following the development of recurrent neural networks capable of mapping from sequences to sequences and their successful application to machine translation, NLP researchers noticed that a similar approach could be effective in \emph{machine comprehension} style applications. The terms \emph{machine comprehension}, \emph{machine reading} typically refer to the broad class of task in which an algorithm has access to a passages of multiple sentences of prose (henceforth the \emph{context}) and a set of questions about the context of the passage (referred to here as \emph{queries}). The algorithm must select a correct (single or multi-word) answer to each question based on the information in the corresponding passage.  Machine comprehension have much in common with \emph{reading comprehension} questions that are used test human reasoning and/or linguistic proficiency in language learners. 
 
 \subsection{Datasets and sub-tasks}
-\paragraph{Deepmind news datasets} The current wave of neural network-based machine comprehension research was in large part triggered by the news comprehension dataset of~\newcite{hermann2015teaching}, compiled automatically from articles on the CNN and Daily Mail websites. News stories on both sites are summarised by a series of bullet points that summarise their main points. To develop their machine comprehension task,~\cite{hermann2015teaching} first identified all named entities in both the article and the bullet points using standard (NER) tools. A question in the CNN or Daily Mail dataset was then constructed by selecting an article, removing an entity from one of the bullet points in the summary and verifying that the entity does indeed appear in the article. To prevent the application of external knowledge to the task, the entities in the articles were replaced with symbolic identifiers. The task facing models is therefore to match the missing entity in each question to one of the symbolic identifiers identifiers in its article. The (smaller) CNN section of the Deepmind dataset alone consists of over 380,000 training and 4,000 test questions taked from over 90,000 distinct articles.
+\paragraph{Deepmind News datasets} The current wave of neural network-based machine comprehension research was in large part triggered by the news comprehension dataset of~\newcite{hermann2015teaching}, compiled automatically from articles on the CNN and Daily Mail websites. News stories on both sites are summarised by a series of bullet points that summarise their main points. To develop their machine comprehension task,~\cite{hermann2015teaching} first identified all named entities in both the article and the bullet points using standard (NER) tools. A question in the CNN or Daily Mail dataset was then constructed by selecting an article, removing an entity from one of the bullet points in the summary and verifying that the entity does indeed appear in the article. To prevent the application of external knowledge to the task, the entities in the articles were replaced with symbolic identifiers. The task facing models is therefore to match the missing entity in each question to one of the symbolic identifiers identifiers in its article. The (smaller) CNN section of the Deepmind dataset alone consists of over 380,000 training and 4,000 test questions taked from over 90,000 distinct articles.
 
-Describe the CNN models? 
-\paragraph{Facebook Children's Book Test (CBT)} The CBT is a multiple-choice test in which models must identify missing words in children's book sentences by using information from the previous 20 sentences in the book~\newcite{hill2015goldilocks}. The questions were selected such that the missing word from the 21st sentence, as well as the nine (incorrect) candidate answer choices, appear at least once in the preceeding 20 sentences. The training and test questions are also (optionally) separated according to whether the missing word (and candidate choices) is a preposition, a verb, a common noun or a named entity. An important difference between the CBT and the Deepmind news dataset is that entities are not anonymised, so that general knowledge acquired from external resources can be used by models to improve performance on the test set. In total there are over 660,000 training and 10,000 test questions in the CBT, divided roughly equally according to the four question types. 
+\paragraph{Facebook Children's Book Test (CBT)} The CBT is a multiple-choice test in which models must identify the missing word in a sentence from a children's book by using information from the previous 20 sentences in the book~\newcite{hill2015goldilocks}. The questions were selected such that both the missing word from the 21st sentence, and nine distractor candidate answers, appear at least once in the preceeding 20 sentences. The training and test questions are also (optionally) separated according to whether the missing word (and candidate choices) is a preposition, a verb, a common noun or a named entity. An important difference between the CBT and the Deepmind News dataset is that entities are not anonymised, so that general knowledge acquired from external resources can be used by models to improve performance on the test set. In total there are over 660,000 training and 10,000 test questions in the CBT, divided roughly equally according to the four question types. 
 
-\paragraph{Stanford Question Answering (SQuAD) dataset} The SQuAD dataset,~\newcite{rajpurkar2016squad} crowdsourced English speakers to write questions that follow naturally from Wikipedia passages. Thus, while the dataset was more expensive to create, models attempting the SQuAD task must answer authentic questions rather than cloze-style statements with missing words, bringing the task closer to genuine human reading comprehension. A further difference from the Deepmind and CBT datasets is that annotators were encouraged to write questions whose answers were multi-word segments in the article [GIVE AN EXAMPLE]. FINISH ME
+\paragraph{Stanford Question Answering (SQuAD) dataset} The SQuAD dataset,~\newcite{rajpurkar2016squad} crowdsourced English speakers to write questions that follow naturally from Wikipedia passages. Thus, models attempting the SQuAD task must answer authentic questions rather than cloze-style statements with missing words, bringing the task closer to genuine human reading comprehension. A further difference from the Deepmind and CBT datasets is that annotators were encouraged to write questions whose answers were multi-word segments in the article. For instance, the answer to the question \emph{what are two things that a computer always has} is the article segment \emph{a central processing unit (CPU) and some form of memory}. The SQuAD dataset consists of 90,000 training and 10,000 test questions. 
 
- \paragraph{TTI Who did What dataset} The Who did What dataset~\cite{onishi2016did} is based on articles in the English Gigaword Corpus. To compile the resource,~\newcite{onishi2016did} selected articles whose first sentence contained a person named entity. The person entity in question was removed from the sentence to form the question, the remainder of the article discarded, and a new (supporting) article retrieved that refers to the same person. To ensure they are sufficiently informative, the supporting articles were retrieved via an IE-style string matching procedure in which the question is used as the query. Questions were discarded if they could be answered by simple language model or frequency baselines, resulting in a bank of over 180,000 train and 10,000 test questions that humans can answer approximately 84\% of the time. As in the SQuAD dataset, answers in the Who did What dataset may consist of multiple words, although they are all person entities (\emph{the King of France}). 
+ \paragraph{TTI Who did What dataset} The Who did What dataset~\cite{onishi2016did} is based on articles in the English Gigaword Corpus. To compile the resource,~\newcite{onishi2016did} selected articles whose first sentence contained a person named entity. The person entity in question was removed from the sentence to form the question, the remainder of the article discarded, and a new (supporting) article retrieved that refers to the same person. To ensure they are sufficiently informative, the supporting articles were retrieved via an IE-style string matching procedure in which the question is used as the query. Questions were discarded if they could be answered by simple language model or frequency baselines, resulting in a bank of over 180,000 train and 10,000 test questions that humans can answer approximately 84\% of the time. As in the SQuAD dataset, answers in the Who did What dataset may consist of multiple words, although they are all person entities (\emph{the King of France}).
 
-
-
+\paragraph{}Before the advent of neural machine comprehension models, research on machine comprehension typically relied on questions taken directly from real human reading comprehension questions~\cite{hirschman1999deep}. However, since such questions are usually produced by private education enterprises, large-scale datasets of this kind are not freely available for NLP research. Another notable forerunner to today's massive training and test resources is the \emph{MC Test}~\cite{richardson2013mctest}, which consists of 660 stories, and corresponding questions, all written by human annotators. The training data made available with the MC Test dataset is much smaller than more recent resources, and neural language models have not typically performed as well on this task as approaches that employ bespoke, hand-engineered symbolic features. However, recent work has shown that neural language models trained additionally on external data sources can perform competitively on the MC Test~\cite{trischler2016parallel}. Developing and understanding such transfer from general-purpose training data to specific small-scale applications is a key challenge for neural net approaches to machine comprehension and language understanding in general. 
 
 
+\subsection{Models}
+The first large-scale neural network approach to machine comprehension, the {\bf Deepmind recurrent readers}~\cite{hermann2015teaching}, exploits many of the techniques and principles of attention-based NMT (section XX). To answer a question from the Deepmind News dataset, the recurrent readers first apply a bidirectional RNN to the context article~\footnote{This encoding is similar to an attention-NMT model reading the source sentence, but in this case the bidirectional RNN covers multiple sentences}. This yields a variable-length distributed representation of the context containing a unique vector (the RNN hidden state) for each inter-word position in the article. 
 
-Prior to these large-scale resources, research on machine comprehension was based on questions taken directly from real human reading comprehension questions~\cite{hirschman1999deep}. However, since such questions are usually produced by private education enterprises, large-scale datasets of this kind are not freely available for NLP research. Another notable forerunner to today's massive datasets is the \emph{MC Test}~\cite{richardson2013mctest}, which consists of 660 stories, and corresponding questions, all written by human annotators. The training data made available with the MC Test dataset is much smaller than more recent resources, and neural language models have not typically performed as well on this task as approaches that employ bespoke, hand-engineered symbolic features. However, recent work has shown that neural language models trained additionally on external data sources can perform competitively on the MC Test~\cite{trischler2016parallel}. Developing and understanding such transfer from general-purpose training data to specific small-scale applications is a key challenge for neural net approaches to language understanding. 
+In the \emph{attentive reader}, a single distributed representation of the query is computed using another bidirectional RNN, and used to compute attention weights over the set of context vectors. These are used to compute a single, fixed length (weighted sum) representation of the context, which is recombined with the query and fed to an output softmax optimised to predict the correct missing word from all possible words in the model's vocabulary.  In the \emph{impatient reader}, the attention weights, and hence a different weighted-sum representation of the article, is computed for each position in the bullet-point query. Thus, much like the attention-NMT model when processing a target sentence from the training set, the impatient reader can take a different perspective on the context depending on its current point of focus in the query. These perspectives are incremented to arrive at a (complex) single-vector representation of the article, based on which probabilities are computed for vocabulary words as potential answers (as in the attentive reader).
 
+On the Deepmind News tasks, the recurrent reading models outperform a range of symbolic (non-neural) baselines, including those based on TFI-IDF and other techniques popular in information retrieval. They also outperform a neural baseline in which deep, bidirectional LSTM models read the query and the article in turn (as one long, conflated sequence) before predicting a possible answer.
 
-   
+This approach to large-scale machine comprehension was improved-upon by~\newcite{hill2015goldilocks} using a {\bf memory network}. Their model consists of four components. The first embeds the context in a finite set of distributed `memories'. The second weights these memories by matching them to a distributed representation of the query. The third computes a single representation of the memory as a weighted sum of the memories. The fourth predicts an output word via an output softmax over the model vocabulary. The network is trained end-to-end using a maximum likelihood objective. While a specific form of each of these components is also performed by the deepmind recurrent readers, the modular design of the memory network makes it possible to experiment with different strategies for each component.~\newcite{hill2015goldilocks} found particular methods for the first and second components that yielded improved performance on the Deepmind News dataset and strong benchmark performance on the CBT. The first component of the memory network that achieved this performance represented the context as a series of discrete 5-word windows.~\footnote{This representation probably allows the memory network to encode similar information to that encoded by a a bi-RNN at the point of reading the middle word in the window}. In the second component, it employed a `self-supervision' heuristic in which the weights in query and document representations were updated during training to directly increase the probability of retrieving the correct answer from the context relative to the other candidate answers. 
 
-\cite{sordoni2016iterative} (Montreal)
- 
+\newcite{kadlec2016text} continued the trend of improvement with the {\bf attention sum reader}, an elegant solution that combines effective aspects of both memory network and the Deepmind readers. Their approach is \emph{candidate-centric}: rather than estimating the probability of possible answers from a large vocabulary, it simply estimates the probability that some (or all) of the words or segments in the context is the correct answer. Consequently, it avoids the computation of an expensive and inefficient softmax over a large vocabulary, and can focus directly on locating a part of the context than indicates the correct answer. Specifically, the model reads the context using bidirectional LSTMs and stores representations focused on every candidate answer (the anonymous en will effectively preclude these simpler solutions andtities in the Deepmind News task or candidate answers in the CBT). A separate network represents the query (again with a bi-LSTM), and the candidates are scored based on their match with the query representation. The model is then simply trained to score correct answers above other candidates.  
 
+The attention sum reader underlines the value of bidirectional recurrent nets in providing variable (`soft') windows of focus over unstructured text. Together with the self-supervision heuristic used by~\newcite{hill2015goldilocks} to train memory networks, it also highlights the importance (and the challenge) of learning to search over potentially unstructured information with continuous, gradient-based learning methods. While the candidate-centric models can overcome this issue on the current set of machine comprehension tasks, they would not work in a more general QA setting where the correct answer does appear directly in the context. 
 
-\cite{dhingra2016gated} gatted reader
+Since the work of~\newcite{kadlec2016text}, various contributions have incremented the state-of-the-art on both the CBT and Deepmind News datasets. Some of these approaches derive improvements from richer representation of the context:  \cite{kobayashi2016dynamic,weissenborn2016separating,sordoni2016iterative}. Others experiment with more sophisticated ways to access the context, including hierarchical attention~\cite{cui2016attention}, repeated memory access~\cite{cui2016attention,weissenborn2016separating,dhingra2016gated,sordoni2016iterative} and explicit entailment-style reasoning operations~\cite{trischler2016natural}. Following the success of the attention sum reader~\newcite{kadlec2016text},  all of the aforementioned models are candidate-centric rather than predicting answers from their full vocabulary. At the time of writing, the best performing model on the CBT is that of~\cite{sordoni2016iterative}, which combines a bi-RNN context representations with iterative memory access. The current best on the Deepmind News task is achieved by~\newcite{dhingra2016gated}, whose model uses a multiplicative operation to match query representations with increasingly high-level views of the context.\footnote{An excellent repository for many of the datasets, papers and results discussed in this section can be found at \url{http://uclmr.github.io/ai4exams/eqa.html}}
 
-\cite{trischler2016natural} Maluuba epi reader
-
-\cite{miller2016key} key value FB
-
-\cite{cui2016attention} and 
-
-\cite{weissenborn2016separating} separating answers from queries
-
-\cite{kadlec2016text} IBM watson paper
-
-
-
-\cite{chen2016thorough} (Analysis of CNN)
-\cite{kobayashi2016dynamic}
-\cite{yin2016attention}
-
-
-
-
-
-
-
-\cite{onishi2016did} (TTI QA)
-
-
-\cite{richardson2013mctest} MC Test
-
-\footnote{An excellent repository for many of the machine learning datasets and papers discussed in this section can be found at \url{http://uclmr.github.io/ai4exams/eqa.html}}
+While the greater architectural sophistication of these latter models yields small improvements on the Deepmind News and CBT tasks, it may be that the more sophisticated datasets are needed to see the advantages of these reasoning components. As highlighted by~\newcite{chen2016thorough}, these tasks can be susceptible to simple solutions that do not seem to rely on principled semantic inference or reasoning. As such, the SQuAD and Who said What datasets, which are just starting to be tackled by the research community, may play an important part in guiding the development of models capable of increasingly human-like text understanding.
 
 \section{Entailment}
 
 \section{Dialogue}
+
+\subsection{general}
+\cite{mrkvsic2015multi}
+\cite{wen2015stochastic}
+\cite{wen2015semantically}
+\cite{serban2015hierarchical}
+\cite{serban2016multiresolution}
+\cite{serban2016hierarchical}
+\cite{li2015diversity}
+\cite{li2016persona}
+\cite{li2016deep} %RL + dialogue
+\cite{vinyals2015neural} %crap - only conversation
+\cite{kalchbrenner2013recurrent}
+
+
+
+\subsection{Evaluation issues} 
+\cite{liu2016not}
+\cite{su2015learning}
+\cite{su2016line}
+
+\subsection{datasets}
+\cite{lowe2015ubuntu}
+\cite{serban2015survey}
 
 \section{Question Answering?}
 
