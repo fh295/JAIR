@@ -106,6 +106,39 @@ While the greater architectural sophistication of these latter models yields sma
 \section{Entailment}
 
 \section{Dialogue}
+What is dialogue?
+
+Approaches using NNs divided into two broad classes.
+
+1) Symbolic representations state tracking / reducing the domain
+ - much of the challenge is small data regimes. For example, Wen collected data by crowdsourcing, but this only resulted in XX. 
+- a typical domain semantic state is very smal - 64 acts? 
+- NNs used for predicting the representation given the previous states and some incoming language (Henderson, Mrksic) or generating language from it ()
+- evaluation is somewhat easier: can (as well as BLEU) ask users whether it conforms to the DA
+- can be harder to get the data
+
+2) End-to-end / learning from raw data / latent semantics
+- requires much bigger data
+- acquire latent representations of state / topic / desire
+- solution could scale to many domains provided data available but perhaps a long way off
+- evaluation harder, can't ask whether the goal was achieved, since goal not even clear. 
+
+ultimately gunning at the same thing: in 1) they form a narrow symbolic channel with which to reason and track behaviour. modular. but in that case the NN is just a smooth function approximator which happens to yield a satisfactory smoothness. Not solving the task itself. 
+
+\section{Models}
+
+\paragrarph{goal-driven models}
+
+\paragraph{data-driven models}
+
+\subsection{Datasets}
+brief summary of Iulian's paper and then point to that
+ 
+\subsection{Evaluation issues} 
+
+\subsection{Future of work}
+
+In many ways both approaches are necessary. One ensures the benefits of NNs can be immediately felt. Other follows the philosophy of NNs more closely and could lead to the long-term solution. 
 
 \subsection{general}
 \cite{mrkvsic2015multi}
@@ -122,10 +155,11 @@ While the greater architectural sophistication of these latter models yields sma
 
 
 
-\subsection{Evaluation issues} 
+
 \cite{liu2016not}
 \cite{su2015learning}
 \cite{su2016line}
+\cite{shang2015neural}
 
 \subsection{datasets}
 \cite{lowe2015ubuntu}
