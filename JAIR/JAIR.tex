@@ -7,6 +7,7 @@
 \usepackage{times}
 \usepackage{latexsym}
 \usepackage{url}
+\usepackage{todo}
 
 % Uncomment this line for the final submission:
 \emnlpfinalcopy
@@ -105,17 +106,42 @@ While the greater architectural sophistication of these latter models yields sma
 
 \section{Entailment}
 
-\section{Dialogue}
-What is dialogue?
+\section{Dialogue and interactive QA systems}
 
-Approaches using NNs divided into two broad classes.
+Dialogue systems aim to model human discourse or conversation in a realistic way while interacting with human users. The applications of dialogue systems range from more the conversational, such as chatbots and online agents,, to the more goal driven, such as a telephone restaurant or hotel reservation systems. Research into dialogue systems extends back to the earliest days of natural langage processing, with systems such as ELIZA \cite{weizenbaum1966eliza}, whose rule-based responses gave a surprising sense of genuine understanding.     
 
-1) Symbolic representations state tracking / reducing the domain
- - much of the challenge is small data regimes. For example, Wen collected data by crowdsourcing, but this only resulted in XX. 
-- a typical domain semantic state is very smal - 64 acts? 
-- NNs used for predicting the representation given the previous states and some incoming language (Henderson, Mrksic) or generating language from it ()
-- evaluation is somewhat easier: can (as well as BLEU) ask users whether it conforms to the DA
-- can be harder to get the data
+The age of deep learning has not left dialogue research untouched. Recent approaches to dialogue involving deep neural networks can be roughly divided into two camps: those with the explicit objective of yielding applicable systems with clear and specific communication objectives (such as completing a restaurant booking), and those whose primary aim is to converse with users in a natural, human-like way, but whose function may be less well-defined. Beyond these two areas of core dialogue research, we also review a third body of research: \emph{interactive QA systems}. These systems align with goal-driven dialogue systems in modeling interactions with a clear function (eliciting or providing a fact or information). However, like conversational agents they aim to cover wide or even unrestricted semantic domains.     
+
+\subsection{Goal-driven dialogue systems}
+Research into goal driven dialogue systems has typically avoided placing all of the burden of representation learning onto their component neural networks~\cite{henderson2014word,mrkvsic2015multi,wen2015stochastic,wen2015semantically}. Instead, these approaches exploit a hand-coded symbolic representation of their internal semantic state. Because these models are applied to comparatively narrow functional domains (such as IT support, restaurant reservation or hotel booking), it is possible for humans to encode all possible dialogue states, by means of an ontology of allowable concepts, predicates and values. For instance, in the Cambridge Restaurant System~\cite{wen2016network} there are 99 possible restaurants, each characterised by six predicates (\emph{food, pricerange, area, address, phone, postcode}) with constrained sets of possible values. 
+
+Once such an ontology has been defined, there are two components of the dialogue problem to which neural networks can be applied in such systems. The first is \emph{state tracking}; the task of updating the current semantic state of the system based on some previous state and some incoming language. The second is \emph{response generation}; the task of producing language that is useful to the user given the current state.~\footnote{We assume that systems process and produce written language in this review, but one or both of these components can be extended to recei
+To overcome some of the challenges facing the more modular, goal-dve input or produce output as raw speech.}
+
+\newcite{henderson2014word} propose employing separate RNNs for each possible predicate in the dialogue state ontology. As the dialogue proceeds, each RNN updates the likelihood of its predicate taking a particular value based on its previous internal state and new linguistic input (in the form of ranked hypotheses from an ASR system). While the model is trained on a very small amount of data (1612 short dialogues), the low dimensional output space for each RNN (the possible values for each dialogue state predicate) and an autoencoding initialisation procedure yield stronger performance than previous approaches to the same task based on bayesian generative graphical models. \newcite{mrkvsic2015multi} builds on this approach, by introducing a single network that predicts the values of all predicates in the dialogue state. It is thus able to model the likely interactions between concept features, such as the address of a restaurant and its price range. However, \newcite{mrkvsic2015multi} show that initialising multiple RNNs in this holistic way before later specialising them to predict the value of a particular predicate yields better performance than training a single generalist network. A similar technique is also applied to train a network that is able to generalise effective across multiple semantic domains (and hence state representations and ontologies). \newcite{mrkvsic2016neural} later show that feed-forward networks with access to only one prior time-step in the chain of dialogue interactions can be equally or more effective than RNNs for dialogue state tracking. 
+
+Goal-driven dialogue systems have also benefited from the application of neural networks to the task of mapping from dialogue state representations to plausible linguistic output. \newcite{wen2015stochastic,wen2015semantically} apply RNNs to the task of natural language generation conditioned on dialogue states. This application mirrors the RNN decoding in the NMT systems described in section (X), which also produced striking results in image caption generation [REFs]. Generation for goal-driven dialogue systems differs in two key aspects from these applications: models typically have access to much less training data, and must be conditioned on symbolic rather than distributed semantic representations. \newcite{wen2015stochastic} overcome the former challenge by keeping network size very small (80 units in the hidden layer), making units dropout [REF] with a high (50\%) probability, and using pre-trained word embeddings in the output layer. \newcite{wen2015semantically} present an elegant solution to the latter obstacle by allowing a one-hot representation of the (symbolic) dialogue state to control a gate of an LSTM module in the generating RNN, which effectively moderates the flow of information from the symbolic representation to the word-by-word generation process. \newcite{wen2015stochastic} also observe improvements by re-ranking the top-n candidate sentences produced by their models. During training this is done by means of a backward RNN conditioned on future dialogue states. At test time, they use an (unconditional) convolutional neural language model fit to the utterances in the training data. 
+
+A key challenge for goal-driven dialogue systems is obtaining training data, which must consist of conversations aligned with corresponding dialogue states. Even with creative crowdsourcing methods~\cite{wen2016network}, the sparsity of such data will be prohibitive for deep learning methods unless the number of possible dialogue states is small. While such ontologies can be defined for restricted domains such as the restaurants in a given city, it is less clear whether the approach is scalable, or whether hand-crafted semantic ontologies could be constructed for the full range of desirable dialogue domains and applications. 
+
+\todo{Insert a table 1 from \cite{wen2015semantically} to show a typical ontology}
+
+\subsection{Conversational dialogue models}
+To overcome some of the challenges facing the more modular, goal-driven systems, these (give a general description of how these approaches work). 
+
+
+
+\cite{shang2015neural} Multi-response for short text. RNN encoder decoder, and a combination of the two. Generates output different from NMT. Evaluate with human NOT BLEU which they argue is pointless and note it doesn't correlate with humans. Train on Weibo chinese corpus of responses on social media. multiple outputs per input. 
+
+\cite{sordoni2015neural} twitter conversations. Feed forward bag-of-words encoders. Recurrent decoders. Best results separating the long-term background into a separate representation from the most recent response and concatenating. 
+
+\cite{vinyals2015neural} classic encoder-decoder DONT CITE!
+
+\cite{kalchbrenner2013recurrent} Dialogue act classification (cannot generate from this model, so maybe just mention out of politeness. 
+
+
+
+\cite{serban2016building} First julian - movies, hierarchical. Hierarchical plus bidirectional. 
 
 2) End-to-end / learning from raw data / latent semantics
 - requires much bigger data
@@ -123,27 +149,21 @@ Approaches using NNs divided into two broad classes.
 - solution could scale to many domains provided data available but perhaps a long way off
 - evaluation harder, can't ask whether the goal was achieved, since goal not even clear. 
 
-ultimately gunning at the same thing: in 1) they form a narrow symbolic channel with which to reason and track behaviour. modular. but in that case the NN is just a smooth function approximator which happens to yield a satisfactory smoothness. Not solving the task itself. 
+\subsection{Interactive QA systems}
 
-\section{Models}
-
-\paragrarph{goal-driven models}
-
-\paragraph{data-driven models}
+can mention DefGen here perhaps. Mostly Weston memory nets QA-style stuff. NTM? 
 
 \subsection{Datasets}
-brief summary of Iulian's paper and then point to that
- 
-\subsection{Evaluation issues} 
 
-\subsection{Future of work}
+\subsection{Discussion}
 
-In many ways both approaches are necessary. One ensures the benefits of NNs can be immediately felt. Other follows the philosophy of NNs more closely and could lead to the long-term solution. 
+The problem of evaluation. Marginally easier for goal-driven systems. 
 
-\subsection{general}
-\cite{mrkvsic2015multi}
-\cite{wen2015stochastic}
-\cite{wen2015semantically}
+The spectrum of structured to open, the NN philosophy etc. 
+ultimately gunning at the same thing: in 1) they form a narrow symbolic channel with which to reason and track behaviour. modular. but in that case the NN is just a smooth function approximator which happens to yield a satisfactory smoothness. Not solving the task itself. 
+- a typical in-domain semantic state is very smal - 64 acts? 
+
+
 \cite{serban2015hierarchical}
 \cite{serban2016multiresolution}
 \cite{serban2016hierarchical}
@@ -151,25 +171,23 @@ In many ways both approaches are necessary. One ensures the benefits of NNs can 
 \cite{li2016persona}
 \cite{li2016deep} %RL + dialogue
 \cite{vinyals2015neural} %crap - only conversation
-\cite{kalchbrenner2013recurrent}
+
+\cite{su2016line}
 
 
 
 
 \cite{liu2016not}
 \cite{su2015learning}
-\cite{su2016line}
-\cite{shang2015neural}
 
-\subsection{datasets}
+
+%datasets
 \cite{lowe2015ubuntu}
 \cite{serban2015survey}
 
-\section{Question Answering?}
-
 \section{Representation Learning}
 \subsection{Parsing}
-\subsection{Neural representations}
+\subsection{Distributed representations}
 
 \section{Summarisation}
 
