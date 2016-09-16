@@ -115,8 +115,7 @@ The age of deep learning has not left dialogue research untouched. Recent approa
 \subsection{Goal-driven dialogue systems}
 Research into goal driven dialogue systems has typically avoided placing all of the burden of representation learning onto their component neural networks~\cite{henderson2014word,mrkvsic2015multi,wen2015stochastic,wen2015semantically}. Instead, these approaches exploit a hand-coded symbolic representation of their internal semantic state. Because these models are applied to comparatively narrow functional domains (such as IT support, restaurant reservation or hotel booking), it is possible for humans to encode all possible dialogue states, by means of an ontology of allowable concepts, predicates and values. For instance, in the Cambridge Restaurant System~\cite{wen2016network} there are 99 possible restaurants, each characterised by six predicates (\emph{food, pricerange, area, address, phone, postcode}) with constrained sets of possible values. 
 
-Once such an ontology has been defined, there are two components of the dialogue problem to which neural networks can be applied in such systems. The first is \emph{state tracking}; the task of updating the current semantic state of the system based on some previous state and some incoming language. The second is \emph{response generation}; the task of producing language that is useful to the user given the current state.~\footnote{We assume that systems process and produce written language in this review, but one or both of these components can be extended to recei
-To overcome some of the challenges facing the more modular, goal-dve input or produce output as raw speech.}
+Once such an ontology has been defined, there are two components of the dialogue problem to which neural networks can be applied in such systems. The first is \emph{state tracking}; the task of updating the current semantic state of the system based on some previous state and some incoming language. The second is \emph{response generation}; the task of producing language that is useful to the user given the current state.~\footnote{We assume that systems process and produce written language in this review, but one or both of these components can be extended to receive input or produce output as raw speech.}
 
 \newcite{henderson2014word} propose employing separate RNNs for each possible predicate in the dialogue state ontology. As the dialogue proceeds, each RNN updates the likelihood of its predicate taking a particular value based on its previous internal state and new linguistic input (in the form of ranked hypotheses from an ASR system). While the model is trained on a very small amount of data (1612 short dialogues), the low dimensional output space for each RNN (the possible values for each dialogue state predicate) and an autoencoding initialisation procedure yield stronger performance than previous approaches to the same task based on bayesian generative graphical models. \newcite{mrkvsic2015multi} builds on this approach, by introducing a single network that predicts the values of all predicates in the dialogue state. It is thus able to model the likely interactions between concept features, such as the address of a restaurant and its price range. However, \newcite{mrkvsic2015multi} show that initialising multiple RNNs in this holistic way before later specialising them to predict the value of a particular predicate yields better performance than training a single generalist network. A similar technique is also applied to train a network that is able to generalise effective across multiple semantic domains (and hence state representations and ontologies). \newcite{mrkvsic2016neural} later show that feed-forward networks with access to only one prior time-step in the chain of dialogue interactions can be equally or more effective than RNNs for dialogue state tracking. 
 
@@ -127,21 +126,22 @@ A key challenge for goal-driven dialogue systems is obtaining training data, whi
 \todo{Insert a table 1 from \cite{wen2015semantically} to show a typical ontology}
 
 \subsection{Conversational dialogue models}
-To overcome some of the challenges facing the more modular, goal-driven systems, these (give a general description of how these approaches work). 
+The previous section demonstrates that neural networks, and RNNs in particular, can be useful components of traditional dialogue systems. However, the promise of deep learning is that, eventually, internal representations like the semantic `state' of a dialogue system can be inferred automatically from data. Such a step would  obviate the need for expensive, domain-specific ontology engineering. Nonetheless, we are some way from training dialogue systems that are both capable of learning their internal representations and are of practical use to users with a concrete objective. Attempts to meet this challenge constitute a vibrant area of current research. The interface between semantics, language learning and dialogue promises to be one of the most interesting applications of deep learning and language technology in the coming years. 
 
+As with a growing number of NLP application areas, an important basic element of many data-driven, conversational dialogue models is the sequence-to-sequence neural network originally applied to speech recognition and MT. Given a (sufficiently large) corpus transcribing an ordered set of discrete utterances \(u_1 \dots u_n\), perhaps coming from different speakers, a sequence to sequence architecture can model the function mapping one utterance to the next utterance simply by treating the data \(\{u_1, u_2\}\), \(\{u_2, u_3\}\) etc. as \{source, target\} pairs. Once trained in this way, a sequence-to-sequence model given an utterance \(u\) can generate a response utterance \(v\) by approximating the highest probability sentence from the output distribution, much as with NMT models. As shown by both~\cite{sordoni2015neural} and~cite{vinyals2015neural}, models trained in this way capture aspects of typical conversational flow in a compelling way. 
 
+However, there are fundamental limitations to modelling dialogue with a (deterministic) function in this way. Unlike in MT, the mapping between conversational utterances and their responses is evidently not one-to-one - a wide range of possible utterances can be met with the response \emph{I don't know}. Further, to an even greater extent than in MT, in human dialogue there is no single `correct' response to any particular utterance. Motivated by these observations,~\cite{shang2015neural} train a sequence-to-sequence model on a multi-response corpus consisting of social media (Weibo) posts together with set of \(n\) resulting comments, where typically \( 1 \leq n \leq 10\). In other words, the model is trained explicitly to approximate a one-to-many function. Comparing models based on human judgements of their grammaticality, consistency, informativeness etc,~\cite{shang2015neural} find that sequence-to-sequence models cope well in this training regime, outperform a symbolic statistical MT-style model, and that sequence-to-sequence models with attention (Section XX) outperform those without attention. In a related contribution, ~\newcite{li2015diversity} observe an undesirable characteristic of sequence-to-sequence models trained on dialogue corpora. The prior probability of generic or uninformative responses such as \emph{I don't know} in such a corpus is always comparatively high, since such responses can appropriately follow almost any utterance. Therefore, at test time, dialogue sequence-to-sequence models trained, like the best-perfoming NMT mdoels, to maximise the likelihood attributed to the training data produce uninformative responses with high regularity. ~\newcite{li2015diversity} propose a way to mitigate this by down-weighting the importance of this prior probability in the training data. They find that humans judge the output of models to be more interesting and informative as a consequence of being trained in this way.~footnote{See BENGIO and RANZATO for other creative ways of improving the output of sequence prediction models}. 	
 
-\cite{shang2015neural} Multi-response for short text. RNN encoder decoder, and a combination of the two. Generates output different from NMT. Evaluate with human NOT BLEU which they argue is pointless and note it doesn't correlate with humans. Train on Weibo chinese corpus of responses on social media. multiple outputs per input. 
+Another challenge in modelling dialogue is the long-term interactions between utterances. A typical human conversation is full of references to entities and facts mentioned previously in the same conversation. However, RNNs trained on human dialogue data generate utterances that clearly contradict those made several turns earlier in the dialogue, yielding conspicuously non-human output [INSERT EXAMPLE]. Moreover, using LSTMs or GRUs to augment the sensitivity of RNNs to longer temporal dependencies does not effectively resolve the issue.~\newcite{sordoni2015neural} instead employ a feedforward (bag-of-words) architecture to encode all previous dialogue utterances in a single vector, which is concatenated to a representation of the latest utterance (effectively giving equal status to the current utterance and all previous utterances combined). This combined representation is then mapped to a suitable response using a standard RNN decoder. \newcite{sordoni2015neural} finds that the addition of this longer-term perspective improves performance compared with a model that responds based on the most recent utterance alone. \newcite{serban2016building} extend this idea with a two-level RNN architecture involving three components. The lower RNN encodes utterances much as in a standard sequence-to-sequence model. A dialogue tracking RNN reads the final hidden state of this encoder (a distributed representation summarising its content), updates its own internal state and produces some output representation. A decoder RNN then predicts a suitable (linguistic) response given this output of the state tracking RNN. This approach is more expressive than that of \cite{sordoni2015neural} in two important ways. First, because it reads all linguistic input with RNNs it can encode order-dependent aspects of all utterances. Second, the state-tracking RNN allows the model to learn (and generalise over) common sequential dependencies in high-level semantic flow of the conversation.\footnote{In this sense, the highest level network in~\cite{serban2016building} is analogous to the specialised state-tracking RNNs proposed by~\newcite{mrkvsic2015multi}} Importantly, while the two-level model involves three RNNs, it can be trained fully end-to-end like any other sequence-to-sequence model, so that the component networks are optimised jointly to increase the likelihood of modelling observed conversation data. Thanks to its greater expressivity, however, the two-level RNN exhibits lower perplexity on held-out conversation data than both the standard sequence-to-sequence approach and the (flatter) contextual model of~\cite{sordoni2015neural}.
 
-\cite{sordoni2015neural} twitter conversations. Feed forward bag-of-words encoders. Recurrent decoders. Best results separating the long-term background into a separate representation from the most recent response and concatenating. 
+The most recent contributions have taken several new and promising directions in addressing the myriad challenges of modelling human dialogue. Much of this work concerns narrowing the gap between hand-engineered goal-driven models and fully end-to-end approaches, and, specifically, giving data-driven architectures more hope of executing the semantic reasoning and inference necessary to be a useful tool for human users.  
+- Serban (from Bowman) - variational model. Also Yishu and Lei perhaps. Refer to Chung. HOW DOES A VAE REALLY WORK?
+- Papers cited in latest Serban. 
+- Li reinforcement learning approach.
 
-\cite{vinyals2015neural} classic encoder-decoder DONT CITE!
+Finally,~\cite{li2016persona} tackle the problem of giving each interlocutor as a distinct persona, by introducing additional latent representations (embeddings) for storing information associated each of the contributors in a conversation. The response of a given speaker can then be generated conditioned on both on the previous utterances and the appropriate persona embedding, which yields greater within-person consistency in the model output. For instance, the model output for Person 1 might claim to be British and later to like fish and chips, whereas the responses of Person 2 indicate that she is Italian and, later, that she likes pizza. 
 
-\cite{kalchbrenner2013recurrent} Dialogue act classification (cannot generate from this model, so maybe just mention out of politeness. 
-
-
-
-\cite{serban2016building} First julian - movies, hierarchical. Hierarchical plus bidirectional. 
+\cite{kalchbrenner2013recurrent} Dialogue act classification (cannot generate from this model, so maybe just mention out of politeness . 
 
 2) End-to-end / learning from raw data / latent semantics
 - requires much bigger data
@@ -151,24 +151,58 @@ To overcome some of the challenges facing the more modular, goal-driven systems,
 
 \subsection{Interactive QA systems}
 
+
+
+\cite{weston2016dialog}
+
+\cite{bordes2016learning} (NOT PUBLISHED) Bridge gap between goal-driven and end-to-end (chit-chat). test the capacity of end-to-end dialog systems for conducting goal-oriented
+dialog Proposes ways to make the data-driven approach more structured. these five tasks cover several dialog stages and test if models can learn various abilities such as
+performing dialog management, querying KBs, interpreting the output of such queries to continue
+the conversation or dealing with new entities not appearing in dialogs from the training set. Restaurant domain. No new model but try memory networks. Use the training set to teach the model how to interact with the KB - but test it on entities (restaurants) that are not in the training set. Also adapt the dialogue state tracking data of Henderson to this format (by creating output but not using the labelled state for each utterance). 
+
+\cite{dodge2015evaluating} Bridge gap between goal-driven and end-to-end. Uses templates to generate data from either QA (movie questions) or recommendation (I like x, y z, you should try X). 
+
+
+
+\cite{miller2016key} Key value networks. Read a key, return a value. Also hashing - narrow down the memory based on symbolic operation on possible content. Idea is to bridge gap between KB and free text. 
+
 can mention DefGen here perhaps. Mostly Weston memory nets QA-style stuff. NTM? 
 
+Cite latest Weston paper.
+
 \subsection{Datasets}
+Any recording or transcript of conversation can potentially be a useful training resource for dialogue systems. Consequently, there is a great variety of potentially relevant corpora, which are surveyed in detail by~\cite{serban2015survey}. We therefore outline only those that have proved useful to date in training the more recent network-based dialogue models.
+
+The Dialogue State Tracking Challenge (DSTC) corpora have proved to be an important resource and testbed for goal-driven dialogue models, such as the RNN-based state tracker of~\newcite{henderson2014word}. [DOES MRKSIC USE THESE TOO?] Each of these corpora contains between 3,000 and 15,000 dialogues recording interactions between humans and rudimentary dialogue systems, and each is focused on a different practical domain. For instance, DSTC 1 transcribes interactions with an automatic bus ride system, and DSTC 3 records interactions with a restaurant booking system.~\cite{wen2015semantically} extend this by [SAY HOW THEY EXTEND IT].  
+
+Dialogue systems that do not rely on hand-engineered semantic states typically require much more raw data to train. Research on end-to-end, data-driven conversational models has therefore tended to exploit larger datasets that created specifically for training dialogue systems, such records of social media posts, tweets or comments. Work that uses such resources include the encoder-decoder model of~\cite{shang2015neural}, whose Sina Weibo Corpus~\cite{shang2015neural} records multiple responses (from different users) to each of 4.5m initial postings.~\newcite{sordoni2015neural},~\newcite{li2015diversity},~\newcite{serban2016multiresolution} all experiment with similar datasets containing over 100 million context-message-response or A-B-A triples extracted from Twitter. 
 
 \subsection{Discussion}
 
-The problem of evaluation. Marginally easier for goal-driven systems. 
+There is are even greater difficulties to overcome, and apparently even less consensus among researchers, when it comes to evaluating data-driven or conversational dialogue models. XX compare models based on their average per-word perplexity on some held-out data similar to the training set. Such an evaluation framework reduces the task to language modelling for a particular domain, and has several limitations. First, it does not measure the capacity of the system to generate an answer given some input, but merely to quantify the relative quality of possible responses. Second, a model at a given point in dialogue is not rewarded for exhibiting low perplexity for any responses beyond the single response in the test data, even though in practice numerous responses may be viable, particularly since no explicit goal is defined for the dialogue. Several studies have overcome the first of these limitations by requiring models to generate ranked lists of responses, e.g. by approximating MAP estimates from the output distribution with beam search (as in MT systems). The contents of such a list can be compared with the correct test response using metrics such as BLEU or METEOR. However, such evaluations suffer particularly from the second limitation, exacerbated by the fact that BLEU-style metrics are based simply on word or n-gram overlap. This means that even if a model response matches is grammatical and means the same as with the test response, the model will not be credited unless precisely the same words are used. Perhaps unsurprisingly, then, it has been observed that BLEU-style evaluations exhibit negligible correlation with human ratings of system quality [REF]. Attempts to mitigate this critical flaw by using pre-trained word embeddings to generalise output and test responses have so far had mixed success [REF].   
+
+*data-driven*
+perplexity (clearly odd)
+blue / meteor vs. held-out data (shown to be a problem)
+human rating (clearly optimal)
+prediction / answer selection (Ubuntu) - not so stupid
+
+*goal-driven*
+state-tracking: classification of held-out data 
+generation: humans rate in terms of naturalness (not great)
+humans rate in terms of function using ontology - better.
+
+*QA-systems*
 
 The spectrum of structured to open, the NN philosophy etc. 
-ultimately gunning at the same thing: in 1) they form a narrow symbolic channel with which to reason and track behaviour. modular. but in that case the NN is just a smooth function approximator which happens to yield a satisfactory smoothness. Not solving the task itself. 
-- a typical in-domain semantic state is very smal - 64 acts? 
+ultimately gunning at the same thing: in 1) they form a narrow symbolic channel with which to reason and track behaviour. modular. but in that case the NN is just a smooth function aproximator which happens to yield a satisfactory smoothness. Not solving the task itself. 
+- a typical in-domain semantic state is very small - 64 acts? 
 
 
-\cite{serban2015hierarchical}
-\cite{serban2016multiresolution}
-\cite{serban2016hierarchical}
-\cite{li2015diversity}
-\cite{li2016persona}
+
+
+
+
 \cite{li2016deep} %RL + dialogue
 \cite{vinyals2015neural} %crap - only conversation
 
@@ -183,7 +217,7 @@ ultimately gunning at the same thing: in 1) they form a narrow symbolic channel 
 
 %datasets
 \cite{lowe2015ubuntu}
-\cite{serban2015survey}
+
 
 \section{Representation Learning}
 \subsection{Parsing}
