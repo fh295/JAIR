@@ -149,20 +149,18 @@ Finally,~\cite{li2016persona} tackle the problem of giving each interlocutor as 
 - solution could scale to many domains provided data available but perhaps a long way off
 - evaluation harder, can't ask whether the goal was achieved, since goal not even clear. 
 
-\subsection{Interactive QA systems}
+\subsection{Simulated data approaches}
 
+Surveying the landscape of dialogue research, it is clear that both goal-directed and end-to-end data-driven systems suffer from important limitations that could prevent each respective approach from yielding widely-adopted, general purpose dialogue systems. This has led to a strand of recent research in which end-to-end neural network agents (with no task-specific hand engineering) are trained on pseudo-natural, but algorithmically generated, language data designed to contain certain information and/or exemplify particular reasoning patterns. This approach can be considered as a `hybrid' between goal-driven and fully data-driven approaches. Hybrid approaches based on simulated data aim to couple the scalability, domain-adaptation, cost and naturalness advantages of end-to-end approaches with many of the benefits of goal-driven systems, such as direct functional utility and clear performance measurement.
 
+An important motivating insight for the hybrid approach is that there are distinct types of reasoning or inductive step required by dialogue agents to arrive at useful output, and that these types can be represented by canonical or prototypical dialogue exemplars. These abstract reasoning patterns differ from the symbolic semantic states specified by the developers of goal-driven dialogue systems in that they are in principle pertinent to dialogue from any linguistic or semantic domain. For example, the `two supporting facts' class exemplifies reasoning that straightforwardly combines information from two previous utterances in some dialogue in order to produce a sensible response. The `simple negation' class explicitly requires understanding that propositions in some dialogue are either negated or not in order to arrive at a satisfactory response.~\newcite{weston2015towards} define ten classes of reasoning intended to cover many of the common types of reasoning found in dialogues between users and agents and provide algorithmically-generated examplars for each class (SEE TABLE X). Such data-generation requires X and has limitations such as Y. Nevertheless, it is cheaper and easier than Z.   
 
-\cite{weston2016dialog}
+\cite{dodge2015evaluating} Bridge gap between goal-driven and end-to-end. Uses templates to generate data from either QA (movie questions) or recommendation (I like x, y z, you should try X). 
 
 \cite{bordes2016learning} (NOT PUBLISHED) Bridge gap between goal-driven and end-to-end (chit-chat). test the capacity of end-to-end dialog systems for conducting goal-oriented
 dialog Proposes ways to make the data-driven approach more structured. these five tasks cover several dialog stages and test if models can learn various abilities such as
 performing dialog management, querying KBs, interpreting the output of such queries to continue
 the conversation or dealing with new entities not appearing in dialogs from the training set. Restaurant domain. No new model but try memory networks. Use the training set to teach the model how to interact with the KB - but test it on entities (restaurants) that are not in the training set. Also adapt the dialogue state tracking data of Henderson to this format (by creating output but not using the labelled state for each utterance). 
-
-\cite{dodge2015evaluating} Bridge gap between goal-driven and end-to-end. Uses templates to generate data from either QA (movie questions) or recommendation (I like x, y z, you should try X). 
-
-
 
 \cite{miller2016key} Key value networks. Read a key, return a value. Also hashing - narrow down the memory based on symbolic operation on possible content. Idea is to bridge gap between KB and free text. 
 
@@ -200,12 +198,6 @@ ultimately gunning at the same thing: in 1) they form a narrow symbolic channel 
 
 
 
-
-
-
-\cite{li2016deep} %RL + dialogue
-\cite{vinyals2015neural} %crap - only conversation
-
 \cite{su2016line}
 
 
@@ -226,6 +218,12 @@ ultimately gunning at the same thing: in 1) they form a narrow symbolic channel 
 \section{Summarisation}
 
 \section{Active Learning}
+
+\cite{weston2016dialog} Simulated conversation in which questions are asked at the end, and the goal is to see how well agents are at learning from the dialogue, given different reward and cost function setups. 
+Angeliki paper
+
+\cite{li2016deep} %RL + dialogue
+
 
 \section{Miscellaneous Others}
 
