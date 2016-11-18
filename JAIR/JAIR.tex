@@ -8,6 +8,7 @@
 \usepackage{latexsym}
 \usepackage{url}
 \usepackage{todo}
+\usepackage{graphicx}
 
 % Uncomment this line for the final submission:
 \emnlpfinalcopy
@@ -58,9 +59,15 @@
 
 \section{Introduction}
 
-In recent years, artificial neural networks and their application - now often referred to as \emph{deep learning} - has become increasingly popular in the field of natural language processing (NLP). Artificial neural networks have existed in various guises since at least the 1940s [REFs]. Indeed, some of their earliest applications were as models of human word learning [REF]. Nevertheless, the knowledge, software and hardware required to train such networks on the sort of large-scale datasets available to researchers in language technology have only recently become widespread. Since then, however, their proliferation has been striking. Deep learning techniques have now been successfully applied to numerous NLP sub-fields and tasks, from speech recognition and machine translation to question-answering and dialogue, in many cases resulting in at or near state-of-the-art performance.  
+In recent years, artificial neural networks, now usually referred to as \emph{deep learning} models, have become increasingly popular in the field of natural language processing (NLP). Artificial neural networks have existed in various guises since at least the 1940s~\cite{mcculloch1943logical}, and have long been established as effective cognitive models of human word learning~cite{hinton1986learning,seidenberg1989distributed}. Nevertheless, the knowledge, software and hardware required to train such networks on the sort of large-scale datasets available to researchers in language technology have only recently become widespread. Since then, their proliferation has been striking. Deep learning techniques have now been successfully applied to numerous NLP sub-fields and tasks, from speech recognition and machine translation to question-answering and dialogue, in many cases resulting in at or near state-of-the-art performance.  
 
-This paper is a review of the use of deep learning in NLP. It is intended for readers who would like an introductory overview of the important literature concerning the application of deep learning to key problems in language technology. While we provide some high-level description of the deep learning methods and techniques themselves, our principal focus is on \emph{the way in which they are applied, and their contribution to the different language problems}. As such, the sections correspond to the different domains and subfields of NLP. For finer details of learning algorithms and architectures, we instead refer the reader to the excellent explanations of [REF - DL textbook] and [REF - goldberg]. Similarly, we do not pretend to cover all literature connecting language and deep learning. Given the sheer quantity of research, such an endeavour would necessitate very superficial treatment. Instead, we provide a deeper discussion and analysis of what we consider to be either the original, the most influential or the most thorough contributions in each area. 
+This paper is a review of the use of deep learning in NLP. It is intended for readers who would like an introductory overview of the important literature concerning the application of deep learning to key problems in language technology. While we provide some high-level description of the deep learning methods and techniques themselves, our principal focus is on \emph{the way in which they are applied, and their contribution to the particular aspects and challenges of language processing}. As such, the sections correspond to the different domains and subfields of NLP. For finer details of learning algorithms and architectures, we instead refer the reader to the excellent exppositions in~\cite{Goodfellow-et-al-2016-Book} and~\cite{goldberg2015primer}. Similarly, we do not pretend to cover all literature connecting language and deep learning. Given the sheer quantity of research, such an endeavour would necessitate very superficial treatment~\footnote{See Figure~\ref{fig:DLgrowth} for an illustration of this explosion of research}. Instead, we provide a deeper discussion and analysis of what we consider to be either the original, the most influential or the most thorough contributions in each area. 
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{boat.jpg}
+  \caption{The striking growth in NLP research using Deep Learning, as indictated by the number of papers with 'deep' or 'neural' in the title at ACL and EMNLP.}
+  \label{fig:DLgrowth}
+\end{figure}
 
 \section{Background}
 
